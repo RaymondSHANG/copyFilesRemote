@@ -79,15 +79,15 @@ def copyfiles(sourcefiles, targetDir,sourceMD5files=None,targetMD5files=None,dry
                     shutil.copyfile(f, path_t)
 
 if __name__ == "__main__":
-    print("Hello, World!")
-    dir_current = os.getcwd()
-
+    #dir_current = os.getcwd()
     parser = argparse.ArgumentParser()
     parser.add_argument("source",help="The directory or files of the source")
     parser.add_argument("target",help="The directory or files of the target")
     parser.add_argument("--p",nargs='?',help="The pattern of the copied files",default=None)
     parser.add_argument("--md5a",nargs='?',help="files that contain MD5 of the source files",default=None)
     parser.add_argument("--md5b",nargs='?',help="files that contain MD5 of the target files",default=None)
+    parser.add_argument("--dryRun",nargs='?',help="Dry run or nor?",default=True)
+
     args = parser.parse_args()
     p=args.p
     #if args.p is not None:
@@ -98,8 +98,10 @@ if __name__ == "__main__":
     sourcefiles = os.listdir(args.source)
     sourcefiles = filterFiles(sourcefiles,p) #Filtering only the files.
     sourcefiles = [os.path.join(args.source,f) for f in sourcefiles]
+    print("files to be copied:")
     print(*sourcefiles, sep="\n")
+    print("======================================\n\n")
     #targetfiles = os.listdir(args.target)
     #targetfiles = filterFiles(targetfiles,p) #Filtering only the files.
-    print(getMD5("checkmd5.md5"))
-    copyfiles(sourcefiles=sourcefiles,targetDir=args.target,sourceMD5files=f"{args.md5a}",targetMD5files=f"{args.md5b}")
+    #print(getMD5("checkmd5.md5"))
+    copyfiles(sourcefiles=sourcefiles,targetDir=args.target,sourceMD5files=f"{args.md5a}",targetMD5files=f"{args.md5b}",dry_run=args.dryRun)
