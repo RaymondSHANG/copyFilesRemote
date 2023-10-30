@@ -8,6 +8,7 @@ Ideally, I want to implement it in nextflow. However, I'm not sure how to check 
 
 I think in later newer versions of nextflow, it might have this function as dicussed here: https://github.com/nextflow-io/nextflow/issues/2844
 
+Currently, I only one nexf flow script for copy files in copyFilesRemote.nf
 ## Python implementation
 I wrote a python script for this task.
 
