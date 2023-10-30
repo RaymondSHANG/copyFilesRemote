@@ -22,21 +22,35 @@ I wrote a python script for this task.
 To tun the script:
 
 ```bash
-python copyFilesRemote_python.py /Users/yshang/Dropbox/github/copyFilesRemote/testDir/af testDir/bf --p '[ab].txt' --md5a testDir/af/md5sum.txt --md5b testDir/bf/md5sum.txt --dryRun False
+python copyFilesRemote_python.py /pathsssss/copyFilesRemote/testDir/af testDir/bf --p '[ab].txt' --md5a testDir/af/md5sum.txt --md5b testDir/bf/md5sum.txt --dryRun False
 # Or:
-python copyFilesRemote_python.py /Users/yshang/Dropbox/github/copyFilesRemote/testDir/af testDir/bf --p '[ab].txt' --md5a testDir/af/md5sum.txt --md5b testDir/bf/md5sum.txt --dryRun F
+python copyFilesRemote_python.py /pathsssss/copyFilesRemote/testDir/af testDir/bf --p '[ab].txt' --md5a testDir/af/md5sum.txt --md5b testDir/bf/md5sum.txt --dryRun F
 
+```
+
+Or to some mounted destinations
+```bash
+
+python copyFilesRemote_python.py /pathsssss/copyFilesRemote/testDir/af ~/MountDestination/bf --p '[ab].txt' --md5a testDir/af/md5sum.txt --dryRun False
 ```
 
 Or if you want dry-run:
 
 ```bash
-python copyFilesRemote_python.py /Users/yshang/Dropbox/github/copyFilesRemote/testDir/af testDir/bf --p '.*txt' --md5a testDir/af/md5sum.txt
+python copyFilesRemote_python.py /pathsssss/copyFilesRemote/testDir/af testDir/bf --p '.*txt' --md5a testDir/af/md5sum.txt
 
 ```
 
 
 ```bash
-python copyFilesRemote_python.py /Users/yshang/Dropbox/github/copyFilesRemote/testDir/af testDir/bf --p '.*txt' --md5a testDir/af/md5sum.txt --md5b testDir/af/md5sum.txt --dryRun True
+python copyFilesRemote_python.py /pathsssss/copyFilesRemote/testDir/af testDir/bf --p '.*txt' --md5a testDir/af/md5sum.txt --md5b testDir/af/md5sum.txt --dryRun True
+
+```
+
+# Copy to smb folders
+
+To copy from/to smb server/shared folders, we need to mount it first:
+```bash
+mount -t smbfs //name@server/somepath /MountDestination
 
 ```

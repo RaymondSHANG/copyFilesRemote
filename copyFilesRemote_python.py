@@ -75,7 +75,7 @@ def copyfiles(sourcefiles, targetDir,sourceMD5files=None,targetMD5files=None,dry
             if md5_source != md5_target:
                 print(f"{fname} MD5 does not match. Will copy:{f} ----> {path_t}\n")
                 copytag=True
-
+        
         if copytag : #and (not dry_run)
             print(f"copying {fname}....")
             #print(f"dryRun:{dry_run}")
@@ -83,6 +83,8 @@ def copyfiles(sourcefiles, targetDir,sourceMD5files=None,targetMD5files=None,dry
                 #print("aaaa")
                 shutil.copyfile(f, path_t)
             print(f"{fname} Done\n")
+        else:
+            print(f"File {fname} are identical in both directories!\n")
 
 if __name__ == "__main__":
     #dir_current = os.getcwd()
@@ -106,6 +108,6 @@ if __name__ == "__main__":
     sourcefiles = [os.path.join(args.source,f) for f in sourcefiles]
     print("files to be copied:")
     print(*sourcefiles, sep="\n")
-    print("======================================\n\n")
+    print("======================================\n")
     #print(type(args.dryRun))
     copyfiles(sourcefiles=sourcefiles,targetDir=args.target,sourceMD5files=f"{args.md5a}",targetMD5files=f"{args.md5b}",dry_run=args.dryRun)
