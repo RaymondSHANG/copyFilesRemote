@@ -23,6 +23,8 @@ To tun the script:
 
 ```bash
 python copyFilesRemote_python.py /Users/yshang/Dropbox/github/copyFilesRemote/testDir/af testDir/bf --p '[ab].txt' --md5a testDir/af/md5sum.txt --md5b testDir/bf/md5sum.txt --dryRun False
+# Or:
+python copyFilesRemote_python.py /Users/yshang/Dropbox/github/copyFilesRemote/testDir/af testDir/bf --p '[ab].txt' --md5a testDir/af/md5sum.txt --md5b testDir/bf/md5sum.txt --dryRun F
 
 ```
 

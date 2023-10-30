@@ -54,12 +54,11 @@ def copyfiles(sourcefiles, targetDir,sourceMD5files=None,targetMD5files=None,dry
         fname=os.path.basename(f)
         #os.path.exists()
         path_t=os.path.join(targetDir, fname)
-        
+        copytag=False
         if not os.path.exists(path_t):
             #copy
-            print(f"{path_t} does not exists. Start copy:{f} ----> {path_t}\n")
-            if not dry_run:
-                shutil.copyfile(f, path_t)
+            print(f"{path_t} does not exists. Will copy:{f} ----> {path_t}\n")
+            copytag=True
         else:
             if fname in dict_sources:
                 md5_source=dict_sources[fname]
@@ -74,9 +73,16 @@ def copyfiles(sourcefiles, targetDir,sourceMD5files=None,targetMD5files=None,dry
                 print(f"md5 of newly calculated target file {fname}:{md5_target}")
             
             if md5_source != md5_target:
-                print(f"{fname} MD5 does not match. Start copy:{f} ----> {path_t}\n")
-                if not dry_run:
-                    shutil.copyfile(f, path_t)
+                print(f"{fname} MD5 does not match. Will copy:{f} ----> {path_t}\n")
+                copytag=True
+
+        if copytag : #and (not dry_run)
+            print(f"copying {fname}....")
+            #print(f"dryRun:{dry_run}")
+            if dry_run=='False' or dry_run == 'F':
+                #print("aaaa")
+                shutil.copyfile(f, path_t)
+            print(f"{fname} Done\n")
 
 if __name__ == "__main__":
     #dir_current = os.getcwd()
@@ -101,7 +107,5 @@ if __name__ == "__main__":
     print("files to be copied:")
     print(*sourcefiles, sep="\n")
     print("======================================\n\n")
-    #targetfiles = os.listdir(args.target)
-    #targetfiles = filterFiles(targetfiles,p) #Filtering only the files.
-    #print(getMD5("checkmd5.md5"))
+    #print(type(args.dryRun))
     copyfiles(sourcefiles=sourcefiles,targetDir=args.target,sourceMD5files=f"{args.md5a}",targetMD5files=f"{args.md5b}",dry_run=args.dryRun)
