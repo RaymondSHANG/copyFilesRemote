@@ -4,9 +4,11 @@ from mmap import ACCESS_READ, mmap
 import os
 import re
 import csv
+import shutil
 
 
 def calMD5(path):
+    #print(f"path3:{path}")
     with open(path) as file, mmap(file.fileno(), 0, access=ACCESS_READ) as file:
         return md5(file).hexdigest()
     
@@ -23,8 +25,8 @@ def getMD5(path):
     if os.path.isfile(path):
         with open(path) as tsv:
             for line in csv.reader(tsv, delimiter=' '):
-                print(line)
-                md5,fname = line[0],line[1]
+                #print(line)
+                md5,fname = line[0],line[-1]
                 if fname[0]=='*':
                     fname = fname[1:]
                 dict_md5[fname]=md5
@@ -40,31 +42,41 @@ def filterFiles(filelist,pattern:str=None):
         flist = [f for f in filelist if bool(re.search(pattern2, f))] #Filtering only the files.
     return flist
 
-def copyfiles(sourcefiles, targetDir,sourceMD5files=None,targetMD5files=None):
+def copyfiles(sourcefiles, targetDir,sourceMD5files=None,targetMD5files=None,dry_run=True):
+    if sourceMD5files is not None:
+        dict_sources = getMD5(sourceMD5files)
+    if targetMD5files is not None:
+        dict_targets = getMD5(targetMD5files)
+    #print(dict_sources)
+    #print(f"target:{dict_targets}")
     for f in sourcefiles:
         #.split('/')
         fname=os.path.basename(f)
         #os.path.exists()
         path_t=os.path.join(targetDir, fname)
+        
         if not os.path.exists(path_t):
             #copy
             print(f"{path_t} does not exists. Start copy:{f} ----> {path_t}\n")
+            if not dry_run:
+                shutil.copyfile(f, path_t)
         else:
-            if sourceMD5files is not None:
-                dict_sources = getMD5(sourceMD5files)
-            if targetMD5files is not None:
-                dict_targets = getMD5(targetMD5files)
             if fname in dict_sources:
                 md5_source=dict_sources[fname]
             else:
                 md5_source = calMD5(f)
+                print(f"md5 of newly calculated source file {fname}:{md5_source}")
+            
             if fname in dict_targets:
                 md5_target = dict_targets[fname]
             else:
                 md5_target = calMD5(path_t)
+                print(f"md5 of newly calculated target file {fname}:{md5_target}")
             
             if md5_source != md5_target:
                 print(f"{fname} MD5 does not match. Start copy:{f} ----> {path_t}\n")
+                if not dry_run:
+                    shutil.copyfile(f, path_t)
 
 if __name__ == "__main__":
     print("Hello, World!")
@@ -74,15 +86,20 @@ if __name__ == "__main__":
     parser.add_argument("source",help="The directory or files of the source")
     parser.add_argument("target",help="The directory or files of the target")
     parser.add_argument("--p",nargs='?',help="The pattern of the copied files",default=None)
+    parser.add_argument("--md5a",nargs='?',help="files that contain MD5 of the source files",default=None)
+    parser.add_argument("--md5b",nargs='?',help="files that contain MD5 of the target files",default=None)
     args = parser.parse_args()
-    if args.p is not None:
-        p = str(args.p)
-    else:
-        p=None
+    p=args.p
+    #if args.p is not None:
+    #    p = str(args.p)
+    #else:
+    #    p=None
     print(f"file pattern: {p}")
     sourcefiles = os.listdir(args.source)
     sourcefiles = filterFiles(sourcefiles,p) #Filtering only the files.
+    sourcefiles = [os.path.join(args.source,f) for f in sourcefiles]
     print(*sourcefiles, sep="\n")
     #targetfiles = os.listdir(args.target)
     #targetfiles = filterFiles(targetfiles,p) #Filtering only the files.
     print(getMD5("checkmd5.md5"))
+    copyfiles(sourcefiles=sourcefiles,targetDir=args.target,sourceMD5files=f"{args.md5a}",targetMD5files=f"{args.md5b}")
