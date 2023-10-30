@@ -49,6 +49,7 @@ def copyfiles(sourcefiles, targetDir,sourceMD5files=None,targetMD5files=None,dry
         dict_targets = getMD5(targetMD5files)
     #print(dict_sources)
     #print(f"target:{dict_targets}")
+    flist_toCopy=[]
     for f in sourcefiles:
         #.split('/')
         fname=os.path.basename(f)
@@ -73,18 +74,21 @@ def copyfiles(sourcefiles, targetDir,sourceMD5files=None,targetMD5files=None,dry
                 print(f"md5 of newly calculated target file {fname}:{md5_target}")
             
             if md5_source != md5_target:
-                print(f"{fname} MD5 does not match. Will copy:{f} ----> {path_t}\n")
+                print(f"{fname} MD5 does not match. ")
                 copytag=True
         
         if copytag : #and (not dry_run)
-            print(f"copying {fname}....")
-            #print(f"dryRun:{dry_run}")
+            flist_toCopy.append(f)
+            print(f"Ready to copy:{f} ----> {path_t}\n")
             if dry_run=='False' or dry_run == 'F':
                 #print("aaaa")
+                print(f"copying {fname}....")
                 shutil.copyfile(f, path_t)
-            print(f"{fname} Done\n")
+                print(f"{fname} Done\n")
         else:
             print(f"File {fname} are identical in both directories!\n")
+        
+    return flist_toCopy
 
 if __name__ == "__main__":
     #dir_current = os.getcwd()
@@ -110,4 +114,8 @@ if __name__ == "__main__":
     print(*sourcefiles, sep="\n")
     print("======================================\n")
     #print(type(args.dryRun))
-    copyfiles(sourcefiles=sourcefiles,targetDir=args.target,sourceMD5files=f"{args.md5a}",targetMD5files=f"{args.md5b}",dry_run=args.dryRun)
+    flistToCopy = copyfiles(sourcefiles=sourcefiles,targetDir=args.target,sourceMD5files=f"{args.md5a}",targetMD5files=f"{args.md5b}",dry_run=args.dryRun)
+    print("==============summmary================")
+    for f in flistToCopy:
+        print(f)
+    print("==============  end  =================")
