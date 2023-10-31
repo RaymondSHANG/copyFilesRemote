@@ -90,8 +90,8 @@ def copyfiles(sourcefiles, targetDir, sourceMD5files=None, targetMD5files=None, 
         if copytag:  # and (not dry_run)
             flist_toCopy.append(f)
             print(f"Ready to copy:{f} ----> {path_t}\n")
+            # print(f"dry_run: {dry_run}")
             # if dry_run == 'False' or dry_run == 'F':
-            print(f"dry_run: {dry_run}")
             if not dry_run:
                 print(f"copying {fname}....")
                 # print("aaaa")
