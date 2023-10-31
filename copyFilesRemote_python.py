@@ -90,9 +90,11 @@ def copyfiles(sourcefiles, targetDir, sourceMD5files=None, targetMD5files=None, 
         if copytag:  # and (not dry_run)
             flist_toCopy.append(f)
             print(f"Ready to copy:{f} ----> {path_t}\n")
-            if dry_run == 'False' or dry_run == 'F':
-                # print("aaaa")
+            # if dry_run == 'False' or dry_run == 'F':
+            print(f"dry_run: {dry_run}")
+            if not dry_run:
                 print(f"copying {fname}....")
+                # print("aaaa")
                 shutil.copyfile(f, path_t)
                 print(f"{fname} Done\n")
         else:
@@ -112,9 +114,9 @@ if __name__ == "__main__":
         "--md5a", nargs='?', help="files that contain MD5 of the source files", default=None)
     parser.add_argument(
         "--md5b", nargs='?', help="files that contain MD5 of the target files", default=None)
+    # parser.add_argument("--dryRun", nargs='?', help="Dry run or nor?", default=True)
     parser.add_argument("--dryRun", nargs='?',
-                        help="Dry run or nor?", default=True)
-
+                        help="Dry run or nor?", default='T', type=lambda x: x.lower() not in ['false', 'f', 'no', '0', 'none', 'not'])
     args = parser.parse_args()
     p = args.p
     # if args.p is not None:
