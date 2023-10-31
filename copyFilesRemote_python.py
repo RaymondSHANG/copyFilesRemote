@@ -67,6 +67,7 @@ def copyfiles(sourcefiles, targetDir, sourceMD5files=None, targetMD5files=None, 
             copytag = True
         elif os.path.getsize(f) != os.path.getsize(path_t):
             print(f"{fname} file size does not match!")
+            copytag = True
         else:
             if fname in dict_sources:
                 md5_source = dict_sources[fname]
