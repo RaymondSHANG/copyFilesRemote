@@ -5,6 +5,20 @@ import os
 import re
 import csv
 import shutil
+import logging
+
+logging.basicConfig(filename='copy.log', filemode='w',
+                    format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+# define a Handler which writes INFO messages or higher to the sys.stderr
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+# set a format which is simpler for console use
+formatter = logging.Formatter(
+    '%(asctime)s - %(name)-12s: %(levelname)-8s %(message)s')
+# tell the handler to use this format
+console.setFormatter(formatter)
+# add the handler to the root logger
+logging.getLogger().addHandler(console)
 
 
 def calMD5(path):
@@ -63,42 +77,44 @@ def copyfiles(sourcefiles, targetDir, sourceMD5files=None, targetMD5files=None, 
         copytag = False
         if not os.path.exists(path_t):
             # if target file not exist, then copy
-            print(f"{path_t} does not exists.")
+            logging.info(f"{path_t} does not exists.")
             copytag = True
         elif os.path.getsize(f) != os.path.getsize(path_t):
-            print(f"{fname} file size does not match!")
+            logging.info(f"{fname} file size does not match!")
             copytag = True
         else:
             if fname in dict_sources:
                 md5_source = dict_sources[fname]
             else:
                 md5_source = calMD5(f)
-                print(
-                    f"md5 of newly calculated source file {fname}:{md5_source}")
+                str_source = f"md5 of newly calculated source file {f}:{md5_source}"
+                # logging.info(f"{str_source}")
+                logging.info(str_source)
 
             if fname in dict_targets:
                 md5_target = dict_targets[fname]
             else:
                 md5_target = calMD5(path_t)
-                print(
-                    f"md5 of newly calculated target file {fname}:{md5_target}")
+                str_target = f"md5 of newly calculated target file {path_t}:{md5_target}"
+                # logging.info(f"{str_target}")
+                logging.info(str_target)
 
             if md5_source != md5_target:
-                print(f"{fname} MD5 does not match!")
+                logging.info(f"{fname} MD5 does not match!")
                 copytag = True
 
         if copytag:  # and (not dry_run)
             flist_toCopy.append(f)
-            print(f"Ready to copy:{f} ----> {path_t}\n")
+            logging.info(f"Ready to copy:{f} ----> {path_t}\n")
             # print(f"dry_run: {dry_run}")
             # if dry_run == 'False' or dry_run == 'F':
             if not dry_run:
-                print(f"copying {fname}....")
+                logging.info(f"copying {fname}....")
                 # print("aaaa")
                 shutil.copyfile(f, path_t)
-                print(f"{fname} Done\n")
+                logging.info(f"{fname} Done\n")
         else:
-            print(f"File {fname} are identical in both directories!\n")
+            logging.info(f"File {fname} are identical in both directories!\n")
 
     return flist_toCopy
 

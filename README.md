@@ -52,5 +52,6 @@ python copyFilesRemote_python.py /pathsssss/copyFilesRemote/testDir/af testDir/b
 To copy from/to smb server/shared folders, we need to mount it first:
 ```bash
 mount -t smbfs //name@server/somepath /MountDestination
-
+#or
+mount_smbfs //name@server/somepath /Users/yshang/temp_share
 ```
