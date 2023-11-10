@@ -77,9 +77,11 @@ def copyfiles(sourcefiles, targetDir, sourceMD5files=None, targetMD5files=None, 
         copytag = False
         if not os.path.exists(path_t):
             # if target file not exist, then copy
+            print(f"{path_t} does not exists.")
             logging.info(f"{path_t} does not exists.")
             copytag = True
         elif os.path.getsize(f) != os.path.getsize(path_t):
+            print(f"{fname} file size does not match!")
             logging.info(f"{fname} file size does not match!")
             copytag = True
         else:
@@ -88,7 +90,7 @@ def copyfiles(sourcefiles, targetDir, sourceMD5files=None, targetMD5files=None, 
             else:
                 md5_source = calMD5(f)
                 str_source = f"md5 of newly calculated source file {f}:{md5_source}"
-                # logging.info(f"{str_source}")
+                print(f"{str_source}")
                 logging.info(str_source)
 
             if fname in dict_targets:
@@ -96,24 +98,29 @@ def copyfiles(sourcefiles, targetDir, sourceMD5files=None, targetMD5files=None, 
             else:
                 md5_target = calMD5(path_t)
                 str_target = f"md5 of newly calculated target file {path_t}:{md5_target}"
-                # logging.info(f"{str_target}")
+                print(f"{str_target}")
                 logging.info(str_target)
 
             if md5_source != md5_target:
+                print(f"{fname} MD5 does not match!")
                 logging.info(f"{fname} MD5 does not match!")
                 copytag = True
 
         if copytag:  # and (not dry_run)
             flist_toCopy.append(f)
+            print(f"Ready to copy:{f} ----> {path_t}\n")
             logging.info(f"Ready to copy:{f} ----> {path_t}\n")
             # print(f"dry_run: {dry_run}")
             # if dry_run == 'False' or dry_run == 'F':
             if not dry_run:
+                print(f"copying {fname}....")
                 logging.info(f"copying {fname}....")
                 # print("aaaa")
                 shutil.copyfile(f, path_t)
+                print(f"{fname} Done\n")
                 logging.info(f"{fname} Done\n")
         else:
+            print(f"File {fname} are identical in both directories!\n")
             logging.info(f"File {fname} are identical in both directories!\n")
 
     return flist_toCopy
